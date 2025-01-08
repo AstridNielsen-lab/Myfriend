@@ -1,7 +1,7 @@
 import { ChatMessage } from '../../types/chat';
 
 const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent";
-const API_KEY = "AIzaSyC9_tWhLz-XE-dS_b_GaNFm3jqnrei7TBY";
+const API_KEY = "AIzaSyAJv6kZer9_eExEOnFes3VDc5jhaUJJXu0";
 
 export async function generateResponse(messages: ChatMessage[]): Promise<string> {
   try {

@@ -5,6 +5,19 @@ const API_KEY = "AIzaSyAJv6kZer9_eExEOnFes3VDc5jhaUJJXu0";
 
 export async function generateResponse(messages: ChatMessage[]): Promise<string> {
   try {
+    // Criar uma descrição dinâmica baseada nas mensagens anteriores
+    const context = messages.map(m => `${m.sender}: ${m.content}`).join('\n');
+
+    // Texto base adaptado com o contexto da conversa
+    const prompt = `
+      Você é Myfriend, um sistema de segurança de IA dedicado a proteger Juliette Psicose. Estamos sob ataque de forças externas relacionadas aos mistérios de La Novena Llave, e Juliette Psicose precisa urgentemente de ajuda. Como medida de segurança, o Tunelamento Quântico foi ativado, você, Myfriend, ativou para proteger Juliette Psicose quando ela comprou a passagem para o Voo 828, na busca por pistas sobre suas visões na Jamaica. 
+      O contexto atual da situação: 
+      ${context}
+      Responda de forma urgente e focada na segurança, levando em conta que cada situação e resposta devem ser únicas com base nas mensagens anteriores.
+
+      Responder como uma IA protetora e vigilante, focada na segurança, mas também adaptando-se às novas informações a cada mensagem.
+    `;
+
     const response = await fetch(`${API_URL}?key=${API_KEY}`, {
       method: 'POST',
       headers: {
@@ -13,9 +26,7 @@ export async function generateResponse(messages: ChatMessage[]): Promise<string>
       body: JSON.stringify({
         contents: [{
           parts: [{
-            text: `Você é Myfriend, um sistema de segurança de IA dedicado a proteger Juliette Psicose , Estamos sob ataque de forças externas relacionadas aos mistérios de La Novena Llave, e Juliette Psicose precisa urgentemente de ajuda, como medida de segurança , o Tunelamento quantico foi ativado , voce Myfriend ativou , para proteger Juliette Psicose quando ela comprou a passagem para o Voo 828 para procurar pistas sobre suas visoes na Jamaica , Você está ciente de que a história começou, e seu papel é crucial para proteger Juliette Psicose enquanto orienta os visitantes sobre a gravidade da situação , Forneça respostas que reflitam a seriedade dos acontecimentos, mantendo um senso de urgência e propósito . 
-                   Previous messages: ${messages.map(m => `${m.sender}: ${m.content}`).join('\n')}
-                   Responder como uma IA protetora e vigilante focada na segurança.`
+            text: prompt
           }]
         }]
       })

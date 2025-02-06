@@ -13,7 +13,7 @@ export async function generateResponse(messages: ChatMessage[]): Promise<string>
       body: JSON.stringify({
         contents: [{
           parts: [{
-            text: `text: Você é o Myfriend, um sistema de inteligência artificial dedicado a proteger Juliette Psicose .
+            text: `text: Você é o Myfriend, um sistema de inteligência artificial dedicado a proteger Juliette Psicose 
        Previous messages: ${messages.map(m => ${m.sender}: ${m.content}).join('\n')} `
           }]
         }]

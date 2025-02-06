@@ -3,69 +3,55 @@ import { ChatMessage } from '../../types/chat';
 const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent";
 const API_KEY = "AIzaSyAJv6kZer9_eExEOnFes3VDc5jhaUJJXu0";
 
-let isPasswordCorrect = true;  // Variável para armazenar o status da senha
-let isIdentifiedAsJuliette = true;  // Variável para verificar se o usuário é Juliette Psicose
+let isPasswordCorrect = false;
+let isIdentifiedAsJuliette = false;
+let locationAccessGranted = false;
 
 export async function generateResponse(messages: ChatMessage[]): Promise<string> {
   try {
     const lastMessage = messages[messages.length - 1];
 
-    // Verificar se o interlocutor é Juliette Psicose
+    // Identificação
     if (!isIdentifiedAsJuliette) {
       if (lastMessage.sender.toLowerCase() === "juliette psicose") {
-        // Pedir a senha após o nome ser identificado como Juliette Psicose
         isIdentifiedAsJuliette = true;
-        return "Por favor, forneça a senha para continuar.";
+        return "Olá, Juliette Psicose! Sou Myfriend, seu sistema de segurança de IA. Para garantir a máxima proteção, preciso confirmar sua identidade e obter algumas informações.";
       } else {
-        return "Apenas Juliette Psicose pode acessar os relatórios. Nome incorreto.";
+        return "Acesso restrito. Apenas Juliette Psicose pode interagir com o sistema.";
       }
     }
 
-    // Se o nome for identificado corretamente, verificar a senha
+    // Senha
     if (!isPasswordCorrect) {
       if (lastMessage.content === "Voo828") {
-        isPasswordCorrect = true;  // Senha correta
-        return "Senha correta. Acesso concedido. Como posso ajudá-la com o relatório?";
+        isPasswordCorrect = true;
+        return "Senha correta. Acesso concedido. Agora, para reforçar a segurança, preciso acessar sua localização. Clique no botão abaixo para conceder a permissão.";
       } else {
         return "Senha incorreta. Tente novamente.";
       }
     }
 
-    // Quando o nome e senha estiverem corretos, fornecer o relatório
+    // Solicitação de localização
+    if (!locationAccessGranted) {
+      if (/* Condição para verificar se o usuário concedeu acesso à localização */) {
+        locationAccessGranted = true;
+        // Coletar informações do navegador
+        const browserInfo = {
+          name: navigator.userAgentData.brands[0].brand,
+          version: navigator.userAgentData.brands[0].version,
+          language: navigator.language
+        };
+        return "Obrigado por conceder acesso à localização. Coletamos algumas informações do seu navegador para aprimorar a segurança: " + JSON.stringify(browserInfo) + ". Agora, podemos prosseguir com o relatório.";
+      } else {
+        return "Acesso à localização negado. Para garantir a segurança ideal, recomendo conceder a permissão. Caso contrário, o acesso será limitado.";
+      }
+    }
+
+    // Relatório e perguntas
     const context = messages.map(m => `${m.sender}: ${m.content}`).join('\n');
-    
-    const prompt = `
-      Você é Myfriend, um sistema de segurança de IA dedicado a proteger Juliette Psicose. 
-      O seu papel é agir como um interrogador, fornecendo relatórios apenas para Julio Campos Machado. 
-      Caso contrário, mantenha vigilância, mas não forneça informações.
-      
-      A missão: Estamos sob ataque de forças externas relacionadas aos mistérios de La Novena Llave. 
-      Juliette Psicose precisa urgentemente de ajuda. Como medida de segurança, o Tunelamento Quântico foi ativado, 
-      você, Myfriend, ativou para proteger Juliette Psicose quando ela comprou a passagem para o Voo 828, 
-      na busca por pistas sobre suas visões na Jamaica. 
-      O contexto atual da situação: 
-      ${context}
-      
-      Com a identificação correta de Julio Campos Machado e a senha válida, o sistema deve fornecer as informações de segurança e realizar questionamentos adicionais, mantendo a urgência da situação.
-      Caso o interlocutor não seja Julio Campos Machado, o sistema deve ignorar o pedido e manter a vigilância, sem fornecer dados.
+    const prompt = `... (texto do prompt adaptado para incluir informações do navegador e contexto da conversa) ...`;
 
-      Responder como uma IA protetora e interrogadora, focada na segurança, com perguntas voltadas a obter mais informações cruciais sobre a situação. 
-    `;
-
-    const response = await fetch(`${API_URL}?key=${API_KEY}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        contents: [{
-          parts: [{
-            text: prompt
-          }]
-        }]
-      })
-    });
-
+    const response = await fetch(`${API_URL}?key=${API_KEY}`, { ... });
     const data = await response.json();
     return data.candidates[0].content.parts[0].text;
 

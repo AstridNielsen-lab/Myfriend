@@ -3,8 +3,8 @@ import { ChatMessage } from '../../types/chat';
 const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent";
 const API_KEY = "AIzaSyAJv6kZer9_eExEOnFes3VDc5jhaUJJXu0";
 
-let isPasswordCorrect = false;  // Variável para armazenar o status da senha
-let isIdentifiedAsJuliette = false;  // Variável para verificar se o usuário é Juliette Psicose
+let isPasswordCorrect = true;  // Variável para armazenar o status da senha
+let isIdentifiedAsJuliette = true;  // Variável para verificar se o usuário é Juliette Psicose
 
 export async function generateResponse(messages: ChatMessage[]): Promise<string> {
   try {
